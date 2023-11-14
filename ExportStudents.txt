@@ -1,0 +1,48 @@
+Nome: João Marcos
+Matrícula: 3001
+Carga-horária máxima: 28
+Carga-horária atual: 0
+Turmas:
+- Programação Orientada a Objetos
+
+Nome: Filipe Marcos
+Matrícula: 3002
+Carga-horária máxima: 28
+Carga-horária atual: 0
+Turmas:
+- Cálculo II
+
+Nome: Ana Lia
+Matrícula: 3003
+Carga-horária máxima: 28
+Carga-horária atual: 0
+Turmas:
+- Fundamentos de Sistemas Digitais
+
+Nome: Leandro Frota
+Matrícula: 3004
+Carga-horária máxima: 28
+Carga-horária atual: 0
+Turmas:
+- Programação Orientada a Objetos
+
+Nome: Helena Silva
+Matrícula: 3041
+Carga-horária máxima: 28
+Carga-horária atual: 0
+Turmas:
+- Estruturas de Dados III
+
+Nome: Ashiley Santos
+Matrícula: 3201
+Carga-horária máxima: 28
+Carga-horária atual: 0
+Turmas:
+- Cálculo II
+
+Nome: Kiergh Eswarz
+Matrícula: 3301
+Carga-horária máxima: 28
+Carga-horária atual: 0
+Turmas:
+- Estruturas de Dados III

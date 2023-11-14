@@ -1,0 +1,29 @@
+Nome: Bernardo Nilson
+Matrícula: 1001
+Carga-horária máxima: 12
+Carga-horária atual: 0
+Formação: SISTEMAS_DIGITAIS
+
+Nome: Edson Moreno
+Matrícula: 1002
+Carga-horária máxima: 12
+Carga-horária atual: 0
+Formação: ORIENTACAO_A_OBJETOS
+
+Nome: Juliana Moreira
+Matrícula: 1003
+Carga-horária máxima: 12
+Carga-horária atual: 0
+Formação: MATEMATICA
+
+Nome: Ana Marques
+Matrícula: 1004
+Carga-horária máxima: 12
+Carga-horária atual: 0
+Formação: ESTRUTURA_DE_DADOS
+
+Nome: Fernanda Machado
+Matrícula: 1005
+Carga-horária máxima: 12
+Carga-horária atual: 0
+Formação: ORIENTACAO_A_OBJETOS
