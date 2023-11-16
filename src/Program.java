@@ -135,94 +135,113 @@ public class Program {
     /**
      * Cria a turma
      */
-    public void allocAllClasses() {
+    public void allocAllToClasses() {
+        // Para cada disciplina criada
         for (Subject subject : subjects) {
 
-            ArrayList<Teacher> tempTeachers = teachers.stream()
-                    .filter(teacher -> teacher.getDegree() == subject.getRequiredDegree()
-                            && teacher.getUsedHours() + subject.getWorkload() <= teacher.getMaxHours())
-                    .collect(Collectors.toCollection(ArrayList::new));
+            // Verificamos os professores, dentro todos cadastrados, que pode dar aula para aquela disciplina
+            // e possui horas disponiveis para assumir uma nova turma. No fim, cria-se um ArrayList e atribui à variável
+            List<Teacher> tempTeachers = availableTeachersForSubject(subject);
+            
 
-            /*
-             * ArrayList<Teacher> tempTeachers = new ArrayList<>();
-             * 
-             * for (Teacher teacher : teachers) {
-             * if (teacher.getDegree() == subject.getRequiredDegree()
-             * && teacher.getUsedHours() + subject.workload <= teacher.maxHours) {
-             * tempTeachers.add(teacher);
-             * }
-             * }
-             */
+            // Verificamos os alunos, dentro todos cadastrados, que desejam entrar naquela disiciplina
+            // e possui horas disponiveis para assumir tal turma. No fim, cria-se um ArrayList e atribui à variável
+            List<Student> tempStudents = availableStudentsForSubject(subject);
+            
+            // Cria-se um ArrayList para as turmas que v'ao ser criadas para a disciplina
+            List<Class> tempClasses = new ArrayList<>();
 
-            List<Student> tempStudents = students.stream()
-                    .filter(student -> student.getSubjects().contains(subject)
-                            && student.getUsedHours() + subject.getWorkload() <= student.getMaxHours())
-                    .collect(Collectors.toCollection(ArrayList::new));
-
-            /*
-             * ArrayList<Student> tempStudents = new ArrayList<>();
-             * 
-             * for (Student student : students) {
-             * if (student.getSubjects().contains(subject)
-             * && student.getUsedHours() + subject.getWorkload() <= student.getMaxHours()) {
-             * tempStudents.add(student);
-             * }
-             * }
-             */
-
-            ArrayList<Class> tempClasses = new ArrayList<>();
-
-            System.out.println(tempStudents.size());
-            int classQuantity = (tempStudents.size() / subject.getMaxStudents()) + 1;
-            System.out.println(classQuantity);
+            // Aqui, calculamos a quantidade de turmas, a quantidade de alunos por turma e quantos sobram (corrigimos a sobra ao adicionar os aluno nas turmas)
+            int classQuantity = howManyClasses(tempStudents, subject);
             int studentsPerClass = tempStudents.size() / classQuantity;
-            System.out.println(studentsPerClass);
             int remainder = tempStudents.size() % classQuantity;
-            System.out.println(remainder);
+            
+            System.out.println("\nQuantos alunos? " + tempStudents.size());
+            System.out.println("Quantas turmas? " + classQuantity);
+            System.out.println("Quantos alunos por turma? " + studentsPerClass);
+            System.out.println("Quantos alunos sobraram? " + remainder);
 
             for (int i = 0; i < classQuantity; i++) {
-                int studentsQuantity = studentsPerClass - 1;
-                if (remainder > 0) {
+                int studentsQuantity = studentsPerClass;
+                if (remainder > 0) { // Se ainda temos alunos sobrando, adicionamos um a mais nessa leva e retiramos da quantidade sobrando
                     studentsQuantity++;
                     remainder--;
                 }
 
+                // Pegamos os primeiros estudantes da lista
                 List<Student> studentsToAlloc = tempStudents.subList(0, studentsQuantity);
-                // tempStudents.removeAll(studentsToAlloc);
+               
+                // Esse Stram é basicamente um tempStudents.removeAll(studentsToAlloc)
+                // Tive que transformar em Stream pois gerava um erro de Concurrent Modification
                 tempStudents = tempStudents.stream()
                         .filter(student -> !studentsToAlloc.contains(student))
                         .collect(Collectors.toList());
 
+                // Por fim, criamos a turma com os estudantes
                 Class tempClass = new Class(subject, studentsToAlloc);
 
-                if (!tempTeachers.isEmpty()) {
-                    tempClass.setTeacher(tempTeachers.get(0));
-                    /* tempTeachers.remove(0).addUsedHours(subject.getWorkload()); */
-                } else {
-                    System.out.println("Precisa contratar um professor para " + subject.getName());
-                }
+                // DEPURAÇÃO //
+                System.out.println("Estamos criando as turmas para a disciplina de " + subject.getName());
+                System.out.println("Selecionamos os professores:\n" + tempTeachers.toString());
+                System.out.println("Selecionamos os alunos:\n" + studentsToAlloc.toString());
+                System.out.println("Sobraram os alunos para as próximas turmas:\n" + tempStudents.toString());
 
+                // Se ainda houverem professores, alocamos ele na turma e retiramos da lista temporária
+                setTeacherFromListToClass(tempTeachers, tempClass, subject);
+
+                // Adicionamos no Array das turmas da disciplina
                 tempClasses.add(tempClass);
 
-                /*
-                 * for (Student student : studentsToAlloc) {
-                 * student.addUsedHours(subject.getWorkload());
-                 * }
-                 */
+                // Atualiza a carga horária dos estudantes
+                for (Student student : studentsToAlloc) {
+                    student.addUsedHours(subject.getWorkload());
+                }
             }
 
-            /*
-             * tempClasses.forEach(c -> {
-             * c.getTeacher().addUsedHours(subject.getWorkload());
-             * });
-             * tempClasses.forEach(c -> {
-             * c.getStudents().forEach(s -> s.addUsedHours(subject.getWorkload()));
-             * });
-             */
+            // Adicionamos de fato na lista do nosso programa
             classes.addAll(tempClasses);
         }
     }
 
+    public int howManyClasses(List<Student> students, Subject subject) {
+        return (students.size() / subject.getMaxStudents()) + 1;
+    }
+
+    public void setTeacherFromListToClass(List<Teacher> teachers, Class clazz, Subject subject) {
+        if (!teachers.isEmpty()) {
+            clazz.setTeacher(teachers.get(0));
+            teachers.remove(0).addUsedHours(subject.getWorkload());
+        } else {
+            System.out.println("Precisa contratar um professor para " + subject.getName());
+        }
+    }
+    
+    public List<Teacher> availableTeachersForSubject(Subject subject){
+        List<Teacher> listOfTeachers = new ArrayList<>();
+
+        for (Teacher teacher : teachers) {
+            if (teacher.getDegree() == subject.getRequiredDegree()
+                    && teacher.getUsedHours() + subject.getWorkload() <= teacher.getMaxHours()) {
+                listOfTeachers.add(teacher);
+            }
+        }
+
+        return listOfTeachers;
+    }
+
+    public List<Student> availableStudentsForSubject(Subject subject){
+        List<Student> listOfStudents = new ArrayList<>();
+
+        for (Student student : students) {
+            if (student.getSubjects().contains(subject)
+                    && student.getUsedHours() + subject.getWorkload() <= student.getMaxHours()) {
+                listOfStudents.add(student);
+            }
+        }
+
+        return listOfStudents;
+    }
+    
     /**
      * Export / Salva em arquivo TXT
      */
@@ -276,9 +295,22 @@ public class Program {
 
         s.append("\n-> Turmas :\n");
 
-        for (Class clazz : classes) { // Java entende class como uma palavra dele
+        for (Class clazz : classes) { // Java entende class como uma palavra dele :)
             s.append("\n" + clazz.toString() + "\n");
         }
         return s.toString();
+    }
+
+
+    public String viewSubjectDetails(Subject subject){
+        return subject.getName();
+    }
+
+    public String viewTeacherDetails(Teacher teacher){
+        return teacher.getName();
+    }
+
+    public String viewStudentDetails(Student student){
+        return student.getName();
     }
 }

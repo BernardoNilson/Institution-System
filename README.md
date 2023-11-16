@@ -99,5 +99,5 @@ professor em um computador da universidade. Sendo assim, considerem validar seus
 nos computadores da instituição.
 
 ## Desenvolvimento
-
+diferente da PUCRS aqui as turmas nao tem codigo unico
 ## Compilação e execução

@@ -29,7 +29,7 @@ public class Class extends Subject{
     @Override
     public synchronized String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
-        sb.append("\nProfessor: ").append(teacher);
+        sb.append("\nProfessor: ").append(teacher.getName());
         sb.append("\nAlunos:");
 
         students.stream()
