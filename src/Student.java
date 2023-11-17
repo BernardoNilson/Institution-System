@@ -3,16 +3,17 @@
  */
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Student extends Person {
-    private ArrayList<Subject> subjects;
+    private List<Subject> subjects;
 
     public Student(String name, int id) {
         super(name, id, 28);
         subjects = null;
     }
 
-    public ArrayList<Subject> getSubjects() {
+    public List<Subject> getSubjects() {
         return subjects;
     }
 
@@ -25,10 +26,10 @@ public class Student extends Person {
     @Override
     public String toString(){
         String s = super.toString();
-        s += "\nTurmas:";
-        for (Subject subject : subjects) {
+        s += "\nDisciplias:" + subjects.size();
+        /* for (Subject subject : getSubjects()) {
             s += "\n- " + subject.getName();
-        }
+        } */
         return s;
     }
 }

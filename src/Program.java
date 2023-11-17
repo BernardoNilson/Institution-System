@@ -303,14 +303,20 @@ public class Program {
 
 
     public String viewSubjectDetails(Subject subject){
+        if (subject == null) return "Nenhuma disciplina foi selecionada!";
+
         return subject.getName();
     }
 
     public String viewTeacherDetails(Teacher teacher){
+        if (teacher == null) return "Nenhum professor foi selecionado!";
+
         return teacher.getName();
     }
 
     public String viewStudentDetails(Student student){
+        if (student == null) return "Nenhum aluno foi selecionado!";
+
         return student.getName();
     }
 }

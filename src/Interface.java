@@ -1,5 +1,6 @@
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -24,7 +25,7 @@ public class Interface {
         program = new Program();
 
         frame = new JFrame("Sistema de Gerenciamento da Instituição");
-        frame.setSize(600, 800);
+        frame.setSize(600, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Container container = frame.getContentPane();
@@ -40,14 +41,6 @@ public class Interface {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
-        //  Cria o painel superior
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
-
-        JLabel label = new JLabel("Que bom ver você por aqui! :)");
-        topPanel.add(label);
-        mainPanel.add(topPanel);
-
         // Cria o painel central
         JPanel centerPanel = createCenterPanel();
         mainPanel.add(centerPanel);
@@ -62,18 +55,23 @@ public class Interface {
     public JPanel createStudentPanel() {
          // Cadastro de aluno
         JPanel panelStudent = new JPanel();
-        panelStudent.setLayout(new FlowLayout());
+        panelStudent.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("CADASTRO DE ALUNO");
+        panel.add(label);
+        panelStudent.add(panel);
 
         // Nome
         JLabel labelStudentName = new JLabel("Nome:");
         panelStudent.add(labelStudentName);
-        JTextField textFieldStudentName = new JTextField(30);
+        JTextField textFieldStudentName = new JTextField(15);
         panelStudent.add(textFieldStudentName);
 
         // Matrícula
         JLabel labelStudentId = new JLabel("Matrícula:");
         panelStudent.add(labelStudentId);
-        JTextField textFieldStudentId = new JTextField(10);
+        JTextField textFieldStudentId = new JTextField(5);
         panelStudent.add(textFieldStudentId);
 
         // Botão para cadastro de aluno
@@ -92,29 +90,34 @@ public class Interface {
 
     public JPanel createTeacherPanel() {
         // Cadastro de professor
-        JPanel panelteachers = new JPanel();
-        panelteachers.setLayout(new FlowLayout());
+        JPanel panelTeacher = new JPanel();
+        panelTeacher.setLayout(new BoxLayout(panelTeacher, BoxLayout.Y_AXIS));
+
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("CADASTRO DE PROFESSOR");
+        panel.add(label);
+        panelTeacher.add(panel);
 
         // Nome
         JLabel labelTeacherName = new JLabel("Nome:");
-        panelteachers.add(labelTeacherName);
-        JTextField textFieldTeacherName = new JTextField(30);
-        panelteachers.add(textFieldTeacherName);
+        panelTeacher.add(labelTeacherName);
+        JTextField textFieldTeacherName = new JTextField(15);
+        panelTeacher.add(textFieldTeacherName);
 
         // Matrícula
         JLabel labelTeacherId = new JLabel("Matrícula:");
-        panelteachers.add(labelTeacherId);
-        JTextField textFieldTeacherId = new JTextField(10);
-        panelteachers.add(textFieldTeacherId);
+        panelTeacher.add(labelTeacherId);
+        JTextField textFieldTeacherId = new JTextField(5);
+        panelTeacher.add(textFieldTeacherId);
 
         // Formação
         JLabel labelTeacherDegree = new JLabel("Formação:");
-        panelteachers.add(labelTeacherDegree);
+        panelTeacher.add(labelTeacherDegree);
         JComboBox<Degree> selectTeacherDegree = new JComboBox<>(Degree.values());
-        panelteachers.add(selectTeacherDegree);
+        panelTeacher.add(selectTeacherDegree);
 
         //  Botão de cadastro de professor
-        JButton buttonCreateTeacher = new JButton("Cadastrar");
+        JButton buttonCreateTeacher = new JButton("Cadastrar professor");
         buttonCreateTeacher.addActionListener(e -> {
             boolean result = program.createTeacher(textFieldTeacherName.getText(), Integer.parseInt(textFieldTeacherId.getText()), (Degree) selectTeacherDegree.getSelectedItem());
             
@@ -123,31 +126,36 @@ public class Interface {
             textFieldTeacherName.setText("");
             textFieldTeacherId.setText("");
         });
-        panelteachers.add(buttonCreateTeacher);
-        return panelteachers;
+        panelTeacher.add(buttonCreateTeacher);
+        return panelTeacher;
     }
 
     public JPanel createSubjectPanel() {
         // Cadastro de professor
         JPanel panelSubject = new JPanel();
-        panelSubject.setLayout(new FlowLayout());
+        panelSubject.setLayout(new BoxLayout(panelSubject, BoxLayout.Y_AXIS));
+
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("CADASTRO DE DISCIPLINA");
+        panel.add(label);
+        panelSubject.add(panel);
 
         // Nome
         JLabel labelSubjectName = new JLabel("Nome:");
         panelSubject.add(labelSubjectName);
-        JTextField textFieldSubjectName = new JTextField(30);
+        JTextField textFieldSubjectName = new JTextField(15);
         panelSubject.add(textFieldSubjectName);
 
         // Matrícula
         JLabel labelSubjectId = new JLabel("Código:");
         panelSubject.add(labelSubjectId);
-        JTextField textFieldSubjectId = new JTextField(10);
+        JTextField textFieldSubjectId = new JTextField(5);
         panelSubject.add(textFieldSubjectId);
 
         // Descrição
         JLabel labelSubjectDescription = new JLabel("Descrição:");
         panelSubject.add(labelSubjectDescription);
-        JTextArea textAreaSubjectDescription = new JTextArea();
+        JTextArea textAreaSubjectDescription = new JTextArea(2, 10);
         panelSubject.add(textAreaSubjectDescription);
 
         // Quantidade máxima de alunos
@@ -169,7 +177,7 @@ public class Interface {
         panelSubject.add(selectSubjectDegree);
 
         //  Botão de cadastro de disciplina
-        JButton buttonCreateSubject = new JButton("Cadastrar");
+        JButton buttonCreateSubject = new JButton("Cadastrar disciplina");
         buttonCreateSubject.addActionListener(e -> {
             
             String name = textFieldSubjectName.getText();
@@ -196,35 +204,17 @@ public class Interface {
     public JPanel createCenterPanel() {
         // Cria o painel central
         JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-
-        JPanel panel;
-        JLabel label;
+        centerPanel.setLayout(new GridLayout(1, 3));
 
         // Cadastro de aluno
-        panel = new JPanel();
-        label = new JLabel("CADASTRO DE ALUNO");
-        panel.add(label);
-        centerPanel.add(panel);
-
         JPanel panelStudent = createStudentPanel();
         centerPanel.add(panelStudent);
 
         // Cadastro de professor
-        panel = new JPanel();
-        label = new JLabel("CADASTRO DE PROFESSOR");
-        panel.add(label);
-        centerPanel.add(panel);
-
         JPanel panelteachers = createTeacherPanel();
         centerPanel.add(panelteachers);
 
         // Cadastro de disciplinas
-        panel = new JPanel();
-        label = new JLabel("CADASTRO DE DISCIPLINA");
-        panel.add(label);
-        centerPanel.add(panel);
-
         JPanel panelSubject = createSubjectPanel();
         centerPanel.add(panelSubject);
         return centerPanel;
@@ -233,11 +223,14 @@ public class Interface {
     public JPanel createBottomPanel() {
         // Cria o painel inferior
         JPanel bottomPanel = new JPanel();
-        bottomPanel.setLayout(new FlowLayout());
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+
+        JPanel viewPanel = new JPanel();
+        viewPanel.setLayout(new GridLayout(1, 3));
 
         // Botão para visualizar detalhes de uma disciplina
         JComboBox<Subject> selectSubject = new JComboBox<>(program.getSubjects().toArray(new Subject[0])); // É o mesmo que (Subject[]) program.getSubjects().toArray()
-        bottomPanel.add(selectSubject);
+        viewPanel.add(selectSubject);
 
         JButton buttonViewSubjectDetails = new JButton("Visualizar detalhes de uma disciplina");
         buttonViewSubjectDetails.addActionListener(e -> {
@@ -250,11 +243,11 @@ public class Interface {
             // Exibe a mensagem
             JOptionPane.showMessageDialog(null, details, "Detalhes da disciplina", JOptionPane.INFORMATION_MESSAGE);
         });
-        bottomPanel.add(buttonViewSubjectDetails);
+        viewPanel.add(buttonViewSubjectDetails);
 
         // Botão para visualizar detalhes de um professor
         JComboBox<Teacher> selectTeacher = new JComboBox<>(program.getTeachers().toArray(new Teacher[0]));
-        bottomPanel.add(selectTeacher);
+        viewPanel.add(selectTeacher);
 
         JButton buttonViewTeacherDetails = new JButton("Visualizar detalhes de um professor");
         buttonViewTeacherDetails.addActionListener(e -> {
@@ -267,11 +260,11 @@ public class Interface {
             // Exibe a mensagem
             JOptionPane.showMessageDialog(null, details, "Detalhes do professor", JOptionPane.INFORMATION_MESSAGE);
         });
-        bottomPanel.add(buttonViewTeacherDetails);
+        viewPanel.add(buttonViewTeacherDetails);
 
         // Botão para visualizar detalhes de um aluno
         JComboBox<Student> selectStudent = new JComboBox<>(program.getStudents().toArray(new Student[0]));
-        bottomPanel.add(selectStudent);
+        viewPanel.add(selectStudent);
 
         JButton buttonViewStudentDetails = new JButton("Visualizar detalhes de um aluno");
         buttonViewStudentDetails.addActionListener(e -> {
@@ -284,7 +277,17 @@ public class Interface {
             // Exibe a mensagem
             JOptionPane.showMessageDialog(null, details, "Detalhes do aluno", JOptionPane.INFORMATION_MESSAGE);
         });
-        bottomPanel.add(buttonViewStudentDetails);
+        viewPanel.add(buttonViewStudentDetails);
+
+        bottomPanel.add(viewPanel);
+
+        //  Cria o botão de Refresh
+        JPanel refreshPanel = new JPanel();
+        JButton buttonRefresh = new JButton("Refresh");
+        buttonRefresh.addActionListener(e -> updateView(selectSubject, selectTeacher, selectStudent));
+        refreshPanel.add(buttonRefresh);
+        bottomPanel.add(refreshPanel);
+
         return bottomPanel;
     }
 
@@ -292,7 +295,7 @@ public class Interface {
         JOptionPane.showMessageDialog(null, result ? "Sucesso no cadastro!" : "Falha durante o cadastro, verifique as informações!", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void updateStudentView(JComboBox<Subject> selectSubject) {
+    public void updateSubjectView(JComboBox<Subject> selectSubject) {
         // Obtém os objetos mais recentes
         List<Subject> subjects = program.getSubjects();
 
@@ -308,12 +311,19 @@ public class Interface {
         selectTeacher.setModel(new DefaultComboBoxModel<>(teachers.toArray(new Teacher[0])));
     }
 
-    public void updateSubjectView(JComboBox<Student> selectStudent) {
+    public void updateStudentView(JComboBox<Student> selectStudent) {
         // Obtém os objetos mais recentes
         List<Student> students = program.getStudents();
 
         // Atualiza os JComboBox
         selectStudent.setModel(new DefaultComboBoxModel<>(students.toArray(new Student[0])));
+    }
+
+    public void updateView(JComboBox<Subject> selectSubject, JComboBox<Teacher> selectTeacher, JComboBox<Student> selectStudent){
+        updateSubjectView(selectSubject);
+        updateTeacherView(selectTeacher);
+        updateStudentView(selectStudent);
+        frame.repaint();
     }
 
 }
