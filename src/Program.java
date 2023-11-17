@@ -1,8 +1,11 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Program {
@@ -20,6 +23,7 @@ public class Program {
         this.students = new ArrayList<>();
         this.subjects = new ArrayList<>();
         this.classes = new ArrayList<>();
+        try { importPerson(); } catch (IOException e) { System.out.println("Não foi possível carregar os dados no programa!"); }
     }
 
     /*
@@ -135,14 +139,13 @@ public class Program {
     /**
      * Cria a turma
      */
-    public void allocAllToClasses() {
+    public boolean allocAllToClasses() {
         // Para cada disciplina criada
         for (Subject subject : subjects) {
 
             // Verificamos os professores, dentro todos cadastrados, que pode dar aula para aquela disciplina
             // e possui horas disponiveis para assumir uma nova turma. No fim, cria-se um ArrayList e atribui à variável
             List<Teacher> tempTeachers = availableTeachersForSubject(subject);
-            
 
             // Verificamos os alunos, dentro todos cadastrados, que desejam entrar naquela disiciplina
             // e possui horas disponiveis para assumir tal turma. No fim, cria-se um ArrayList e atribui à variável
@@ -155,11 +158,6 @@ public class Program {
             int classQuantity = howManyClasses(tempStudents, subject);
             int studentsPerClass = tempStudents.size() / classQuantity;
             int remainder = tempStudents.size() % classQuantity;
-            
-            System.out.println("\nQuantos alunos? " + tempStudents.size());
-            System.out.println("Quantas turmas? " + classQuantity);
-            System.out.println("Quantos alunos por turma? " + studentsPerClass);
-            System.out.println("Quantos alunos sobraram? " + remainder);
 
             for (int i = 0; i < classQuantity; i++) {
                 int studentsQuantity = studentsPerClass;
@@ -180,12 +178,6 @@ public class Program {
                 // Por fim, criamos a turma com os estudantes
                 Class tempClass = new Class(subject, studentsToAlloc);
 
-                // DEPURAÇÃO //
-                System.out.println("Estamos criando as turmas para a disciplina de " + subject.getName());
-                System.out.println("Selecionamos os professores:\n" + tempTeachers.toString());
-                System.out.println("Selecionamos os alunos:\n" + studentsToAlloc.toString());
-                System.out.println("Sobraram os alunos para as próximas turmas:\n" + tempStudents.toString());
-
                 // Se ainda houverem professores, alocamos ele na turma e retiramos da lista temporária
                 setTeacherFromListToClass(tempTeachers, tempClass, subject);
 
@@ -201,6 +193,7 @@ public class Program {
             // Adicionamos de fato na lista do nosso programa
             classes.addAll(tempClasses);
         }
+        return !classes.isEmpty();
     }
 
     public int howManyClasses(List<Student> students, Subject subject) {
@@ -245,27 +238,28 @@ public class Program {
     /**
      * Export / Salva em arquivo TXT
      */
-    public void exportStudents() throws IOException {
+    public boolean exportStudents() throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("ExportStudents.txt"))) {
-            String stream = students.stream().map(Student::toString).collect(Collectors.joining("\n\n"));
+            String stream = students.stream().map(Student::toString).collect(Collectors.joining("\n"));
             writer.write(stream);
+            return true;
         } catch (IOException e) {
             throw new IOException("Ocorreu algum erro ao exportar o arquivo :", e);
         }
     }
 
-    public void exportTeachers() throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("ExportTeacher.txt"))) {
-            String stream = teachers.stream().map(Teacher::toString).collect(Collectors.joining("\n\n"));
+    public boolean exportTeachers() throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("ExportTeachers.txt"))) {
+            String stream = teachers.stream().map(Teacher::toString).collect(Collectors.joining("\n"));
             writer.write(stream);
+            return true;
         } catch (IOException e) {
             throw new IOException("Ocorreu algum erro ao exportar o arquivo :", e);
         }
     }
 
-    public void export() throws IOException {
-        this.exportStudents();
-        this.exportTeachers();
+    public boolean export() throws IOException {
+        return exportStudents() && exportTeachers();
     }
 
     /**
@@ -305,18 +299,84 @@ public class Program {
     public String viewSubjectDetails(Subject subject){
         if (subject == null) return "Nenhuma disciplina foi selecionada!";
 
-        return subject.getName();
+        String result = classes.stream().filter(clazz -> clazz.getId() == subject.getId()).map(Class::toString).collect(Collectors.joining("\n"));
+        return (result != null) ? result : "Não há nenhuma turma para a disciplina selecionada!";
     }
 
     public String viewTeacherDetails(Teacher teacher){
         if (teacher == null) return "Nenhum professor foi selecionado!";
 
-        return teacher.getName();
+        String result = "-> Turmas alocadas para " + teacher.getName() + ":\n";
+        for (Class clazz : teacher.getClasses()) { result += clazz.toString(); }
+        result += "\nCarga-horária total: " + teacher.getUsedHours();
+        return result;
     }
 
     public String viewStudentDetails(Student student){
         if (student == null) return "Nenhum aluno foi selecionado!";
 
-        return student.getName();
+        String result = "-> Disciplinas que " + student.getName() + " está cursando/desejando:\n";
+        for (Subject subject : student.getSubjects()) { result += subject.getName(); }
+        result += "\nCarga-horária total: " + student.getUsedHours();
+        return result;
+    }
+
+    public void importPerson() throws IOException {
+        // Lê o arquivo de alunos
+        readStudents();
+    
+        // Lê o arquivo de professores
+        readTeachers();
+    }
+
+    private void readStudents() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("ExportStudents.txt"))) {
+
+            String line = reader.readLine();
+            while (line != null) {
+
+                // Separa a linha em duas
+                String[] fields = line.split(", ");
+                String name = fields[0].split(": ")[1];
+                int id = Integer.parseInt(fields[1].split(": ")[1]);
+
+                // Cria um novo aluno
+                Student student = new Student(name, id);
+
+                // Adiciona o objeto à lista
+                students.add(student);
+
+                line = reader.readLine();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Verifique se o arquivo está no formato \"Nome: Conteudo, Matrícula: ConteudoT, Formação: ConteudoY\"");
+        }
+    }
+
+    private void readTeachers() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("ExportTeachers.txt"))) {
+
+            String line = reader.readLine();
+            while (line != null) {
+
+                // Separa a linha em duas
+                String[] fields = line.split(", ");
+                String name = fields[0].split(": ")[1];
+                int id = Integer.parseInt(fields[1].split(": ")[1]);
+                Degree degree = Degree.valueOf(fields[2].split(": ")[1]);
+
+                // Cria um novo professor
+                Teacher teacher = new Teacher(name, id, degree);
+
+                // Adiciona o objeto à lista
+                teachers.add(teacher);
+
+                line = reader.readLine();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Verifique se o arquivo está no formato \"Nome: Conteudo, Matrícula: ConteudoT, Formação: ConteudoY\"");
+        }
     }
 }

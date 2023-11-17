@@ -1,17 +1,17 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * Teacher
  */
-
-import java.util.ArrayList;
-
 public class Teacher extends Person {
     private Degree degree;
-    private ArrayList<Class> classes;
+    private List<Class> classes;
     
     public Teacher(String name, int id, Degree degree){
         super(name, id, 12);
         this.degree = degree;
-        classes = null;
+        classes = new ArrayList<>();
     }
 
     // Getters
@@ -19,10 +19,16 @@ public class Teacher extends Person {
         return degree;
     }
 
+    public List<Class> getClasses() {
+        return classes;
+    }
+
+    public boolean addClass(Class clazz) {
+        return classes.add(clazz);
+    }
+
     @Override
     public String toString() {
-        String s = super.toString();
-        s += "\nFormação: " + degree;
-        return s;
+        return super.toString() + ", Formação: " + degree;
     }
 }

@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +19,7 @@ public class Class extends Subject{
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+        teacher.addClass(this);
     }
 
     public List<Student> getStudents() {

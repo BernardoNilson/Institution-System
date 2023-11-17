@@ -46,11 +46,11 @@ public class Subject {
     @Override
     public String toString() {
         String s = "";
-        s += "Nome: " + name;
-        s += "\nDescrição: " + description;
-        s += "\nMatrícula: " + id;
-        s += "\nCarga-horária: " + workload;
-        s += "\nQuantidade máxima de alunos: " + maxStudents;
+        s += " Nome: " + name;
+        s += "\n Descrição: " + description;
+        s += "\n Código: " + id;
+        s += "\n Carga-horária: " + workload;
+        s += "\n Quantidade máxima de alunos: " + maxStudents;
         return s;
     }
 }
