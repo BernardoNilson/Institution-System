@@ -111,4 +111,5 @@ O programa também foi testado no Ubuntu 22.04.
 
 Perguntas, caso esqueça:
 - IDs diferentes, como eu fiz e etc.
- 
+ java version "1.8.0_371"                                                                                                Java(TM) SE Runtime Environment (build 1.8.0_371-b11)                                                                   Java HotSpot(TM) 64-Bit Server VM (build 25.371-b11, mixed mode)      
+ javac 17.0.7  
