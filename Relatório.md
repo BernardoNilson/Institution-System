@@ -94,10 +94,12 @@ No computador da PUCRS, você vai utilizar o *Windows* e baixar o arquivo *.zip*
 
 1. Abra o Gerenciador de Arquivos, navegue até o arquivo ``BernardoNilson.zip` e descompacte-o na pasta atual. 
 2. Abra o aplicativo Visual Studio Code.
-3. Clique em "Arquivo".
-4. Clique em "Abrir nova pasta" e selecione a pasta gerada pelo passo 1.
-5. Na barra da lateral esquerda, selecione a 4ª opção: "Executar e Debugar".
-6. Clique no botão "Executar e Debugar".
+3. Clique em "File".
+4. Clique em "Open folder" e selecione a pasta gerada pelo passo 1.
+5. Instale o kit de extensões para Java: "Extension Pack for Java" da própria Microsoft.
+6. Abra o arquivo `App.java` na paasta ``src`
+7. Na barra da lateral esquerda, selecione a 4ª opção: "Executar e Debugar", aba lateral de extensões.
+8. Clique no botão "Run and Debug", na aba de Run and Debug
 
 O passo-a-passo foi testado nos computadores da PUCRS do *laboratório 40X*, com as versões:
 - Java Runtime Enrironment: *X*

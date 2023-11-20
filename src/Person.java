@@ -38,7 +38,5 @@ public class Person {
     @Override
     public String toString() {
         return "Nome: " + name + ", Matrícula: " + id;
-        /* s += "\n Carga-horária máxima: " + maxHours;
-        s += "\n Carga-horária atual: " + usedHours; */
     }
 }

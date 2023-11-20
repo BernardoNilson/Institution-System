@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ public class Class extends Subject{
     private Teacher teacher;
 
     public Class(Subject subject, List<Student> students) {
-        super(subject.getId(), subject.getName(), subject.getDescription(), subject.getMaxStudents(), subject.getWorkload(), subject.getRequiredDegree());
+        super(subject.getId(), subject.getName(), subject.getDescription(), subject.getMaxStudents(), subject.getWorkload(), new ArrayList<Teacher>());
         this.students = students;
         this.teacher = null;
     }

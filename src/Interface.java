@@ -6,14 +6,17 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 public class Interface {
 
@@ -25,13 +28,13 @@ public class Interface {
         program = new Program();
 
         frame = new JFrame("Sistema de Gerenciamento da Instituição");
-        // frame.setSize(900, 600);
+        frame.setSize(900, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Container container = frame.getContentPane();
         container.add(createMainPanel());
 
-        frame.pack();
+        // frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
@@ -165,21 +168,13 @@ public class Interface {
         panelTeacherId.add(textTeacherId);
         panelTeacher.add(panelTeacherId);
 
-        // Formação
-        JPanel panelTeacherDegree = panelWithFlowLayout();
-        panelTeacherDegree.add(label("Formação:"));
-
-        JComboBox<Degree> teacherBoxDegree = new JComboBox<>(Degree.values());
-        panelTeacherDegree.add(teacherBoxDegree);
-        panelTeacher.add(panelTeacherDegree);
-
         // Botão de cadastro de professor
         JPanel panelTeacherCreate = panelWithFlowLayout();
         JButton buttonCreateTeacher = new JButton("Cadastrar professor");
         buttonCreateTeacher.addActionListener(e -> {
             if (!isTextEmpty(textTeacherName, textTeacherId)) {
                 boolean result = program.createTeacher(textTeacherName.getText(),
-                        Integer.parseInt(textTeacherId.getText()), (Degree) teacherBoxDegree.getSelectedItem());
+                        Integer.parseInt(textTeacherId.getText()));
 
                 resultMessage(result);
 
@@ -239,12 +234,20 @@ public class Interface {
         panelSubject.add(panelSubjectWorkload);
 
         // Formação necessária
-        JPanel panelSubjectDegree = panelWithFlowLayout();
-        panelSubjectDegree.add(label("Formação necessária:"));
+        JPanel panelSubjectTeachers = panelWithFlowLayout();
+        panelSubjectTeachers.add(label("Selecione os professores que podem ministrar:"));
 
-        JComboBox<Degree> subjectBoxDegree = new JComboBox<>(Degree.values());
-        panelSubjectDegree.add(subjectBoxDegree);
-        panelSubject.add(panelSubjectDegree);
+        DefaultListModel<Teacher> listOfTeachers = new DefaultListModel<>();
+        listOfTeachers.addAll(program.getTeachers());
+        JList<Teacher> listSubjectTeachers = new JList<>(listOfTeachers);
+        listSubjectTeachers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        panelSubjectTeachers.add(listSubjectTeachers);
+
+        // Cria o botão de Refresh
+        JButton buttonRefresh = new JButton("Refresh");
+        buttonRefresh.addActionListener(e -> updateView(listSubjectTeachers));
+        panelSubjectTeachers.add(buttonRefresh);
+        panelSubject.add(panelSubjectTeachers);
 
         // Botão de cadastro de disciplina
         JPanel panelSubjectCreate = panelWithFlowLayout();
@@ -256,9 +259,10 @@ public class Interface {
                 String description = textAreaSubjectDescription.getText();
                 int maxStudents = Integer.parseInt(textSubjectMaxStudents.getText());
                 int workload = Integer.parseInt(textSubjectWorkload.getText());
-                Degree requiredDegree = (Degree) subjectBoxDegree.getSelectedItem();
+                List<Teacher> teachers = listSubjectTeachers.getSelectedValuesList();
+                System.out.println(teachers.toString());
 
-                boolean result = program.createSubject(id, name, description, maxStudents, workload, requiredDegree);
+                boolean result = program.createSubject(id, name, description, maxStudents, workload, teachers);
 
                 resultMessage(result);
 
@@ -477,6 +481,11 @@ public class Interface {
         updateTeacherView(teacherBox);
         updateStudentView(studentBox);
         frame.repaint();
+    }
+
+    public void updateView(JList<Teacher> listSubjectTeachers) {
+        listSubjectTeachers.setListData(program.getTeachers().toArray(new Teacher[0]));
+        listSubjectTeachers.repaint();
     }
 
     // Fecha a Interface

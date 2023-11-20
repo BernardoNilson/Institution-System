@@ -83,17 +83,14 @@ public class Program {
     /**
      * Cria o professor
      */
-    public boolean createTeacher(String name, int id, Degree degree) {
-        if (name == null || id < 0 || degree == null) {
+    public boolean createTeacher(String name, int id) {
+        if (name == null || id < 0) {
             throw new IllegalArgumentException("Informações de professor invalidas!");
         }
 
-        for (Teacher teacher : teachers) {
-            if (teacher.getId() == id)
-                return false;
-        }
+        if (!isIdValid(id)) return false;
 
-        Teacher teacher = new Teacher(name, id, degree);
+        Teacher teacher = new Teacher(name, id);
         return teachers.add(teacher);
     }
 
@@ -105,10 +102,7 @@ public class Program {
             throw new IllegalArgumentException("Informações de aluno invalidas!");
         }
 
-        for (Student student : students) {
-            if (student.getId() == id)
-                return false;
-        }
+        if (!isIdValid(id)) return false;
 
         Student student = new Student(name, id);
         return students.add(student);
@@ -131,18 +125,15 @@ public class Program {
      * Cria a disciplina
      */
     public boolean createSubject(int id, String name, String description, int maxStudents, int workload,
-            Degree requiredDegree) {
+            List<Teacher> teachers) {
         if (id < 0 || name == null || description == null || maxStudents < 0 || workload < 0
-                || requiredDegree == null) {
+                || teachers == null) {
             throw new IllegalArgumentException("Informações de disciplina invalidas!");
         }
 
-        for (Subject subject : subjects) {
-            if (subject.getId() == id)
-                return false;
-        }
+        if(subjects.stream().anyMatch(e -> e.getId()==id)) return false;
 
-        Subject subject = new Subject(id, name, description, maxStudents, (workload > 12) ? 12 : workload, requiredDegree);
+        Subject subject = new Subject(id, name, description, maxStudents, (workload > 12) ? 12 : workload, teachers);
         return subjects.add(subject);
     }
 
@@ -151,7 +142,7 @@ public class Program {
      */
     public boolean allocAllToClasses() {
         // Limpa tudo e cria novas turmas
-        restarClasses();
+        restartClasses();
 
         // Para cada disciplina criada
         for (Subject subject : subjects) {
@@ -229,7 +220,14 @@ public class Program {
         return (students.size() / subject.getMaxStudents()) + 1;
     }
 
-    private void restarClasses() {
+    private boolean isIdValid(int id) {
+        List<Person> all = new ArrayList<>();
+        all.addAll(teachers);
+        all.addAll(students);
+        return !all.stream().anyMatch(e -> e.getId()==id);
+    }
+
+    private void restartClasses() {
         classes.clear();
         teachers.removeAll(simbolicTeachers);
         teachers.forEach(teacher -> {
@@ -244,9 +242,11 @@ public class Program {
             clazz.setTeacher(teachers.get(0));
             teachers.remove(0).addUsedHours(subject.getWorkload());
         } else {
-            Random rand = new Random();
-            int id = rand.nextInt(100000);
-            createTeacher("Professor Simbólico", id, subject.getRequiredDegree());
+            int id;
+            do {
+                Random rand = new Random();
+                id = rand.nextInt(100000);
+            } while (!createTeacher("Professor Simbólico", id));
             Teacher simbolicTeacher = findTeacherById(id);
             simbolicTeachers.add(simbolicTeacher);
             clazz.setTeacher(simbolicTeacher);
@@ -262,7 +262,7 @@ public class Program {
         List<Teacher> listOfTeachers = new ArrayList<>();
 
         for (Teacher teacher : teachers) {
-            if (teacher.getDegree() == subject.getRequiredDegree()
+            if (subject.getTeachers().contains(teacher)
                     && teacher.getUsedHours() + subject.getWorkload() <= teacher.getMaxHours()) {
                 listOfTeachers.add(teacher);
             }
@@ -421,10 +421,9 @@ public class Program {
                 String[] fields = line.split(", ");
                 String name = fields[0].split(": ")[1];
                 int id = Integer.parseInt(fields[1].split(": ")[1]);
-                Degree degree = Degree.valueOf(fields[2].split(": ")[1]);
 
                 // Cria um novo professor
-                Teacher teacher = new Teacher(name, id, degree);
+                Teacher teacher = new Teacher(name, id);
 
                 // Adiciona o objeto à lista
                 teachers.add(teacher);

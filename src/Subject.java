@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Subject
  */
@@ -7,15 +10,15 @@ public class Subject {
     protected String description;
     protected int maxStudents;
     protected int workload;
-    protected Degree requiredDegree;
+    protected List<Teacher> teachers;
 
-    public Subject(int id, String name, String description, int maxStudents, int workload, Degree requiredDegree) {
+    public Subject(int id, String name, String description, int maxStudents, int workload, List<Teacher> teachers) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.maxStudents = maxStudents;
         this.workload = workload;
-        this.requiredDegree = requiredDegree;
+        this.teachers = new ArrayList<>(teachers);
     }
 
     // Getters
@@ -39,8 +42,8 @@ public class Subject {
         return workload;
     }
 
-    public Degree getRequiredDegree() {
-        return requiredDegree;
+    public List<Teacher> getTeachers() {
+        return teachers;
     }
 
     @Override
