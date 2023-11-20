@@ -77,13 +77,15 @@ public class Interface {
         JPanel panelStudentCreate = new JPanel(new FlowLayout());
         JButton buttonCreateStudent = new JButton("Cadastrar aluno");
         buttonCreateStudent.addActionListener(e -> {
-            boolean result = program.createStudent(textStudentName.getText(),
-                    Integer.parseInt(textStudentId.getText()));
+            if (!isTextEmpty(textStudentName, textStudentId)) {
+                boolean result = program.createStudent(textStudentName.getText(),
+                        Integer.parseInt(textStudentId.getText()));
 
-            resultMessage(result);
+                resultMessage(result);
 
-            textStudentName.setText("");
-            textStudentId.setText("");
+                textStudentName.setText("");
+                textStudentId.setText("");
+            } else resultMessage(false);
         });
         panelStudentCreate.add(buttonCreateStudent);
         panelStudent.add(panelStudentCreate);
@@ -122,15 +124,17 @@ public class Interface {
         JPanel panelAllocStudentButton = new JPanel();
         JButton buttonAllocStudent = new JButton("Adicionar");
         buttonAllocStudent.addActionListener(e -> {
-            int studentId = Integer.parseInt(textStudentAllocId.getText());
-            int subjectId = Integer.parseInt(textSubjectId.getText());
+            if (!isTextEmpty(textStudentAllocId, textSubjectId)) {
+                int studentId = Integer.parseInt(textStudentAllocId.getText());
+                int subjectId = Integer.parseInt(textSubjectId.getText());
 
-            boolean result = program.addSubjectToStudant(subjectId, studentId);
+                boolean result = program.addSubjectToStudant(subjectId, studentId);
 
-            resultMessage(result);
+                resultMessage(result);
 
-            textStudentAllocId.setText("");
-            textSubjectId.setText("");
+                textStudentAllocId.setText("");
+                textSubjectId.setText("");
+            } else resultMessage(false);
         });
         panelAllocStudentButton.add(buttonAllocStudent);
         panelAllocStudent.add(panelAllocStudentButton);
@@ -146,7 +150,7 @@ public class Interface {
         panelTeacher.add(panelWithDescription("CADASTRO DE PROFESSOR"));
 
         // Nome
-        JPanel panelTeacherName = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelTeacherName = panelWithFlowLayout();
         panelTeacherName.add(label("Nome:"));
 
         JTextField textTeacherName = new JTextField(15);
@@ -154,7 +158,7 @@ public class Interface {
         panelTeacher.add(panelTeacherName);
 
         // Matrícula
-        JPanel panelTeacherId = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelTeacherId = panelWithFlowLayout();
         panelTeacherId.add(label("Matrícula:"));
 
         JTextField textTeacherId = new JTextField(5);
@@ -162,7 +166,7 @@ public class Interface {
         panelTeacher.add(panelTeacherId);
 
         // Formação
-        JPanel panelTeacherDegree = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelTeacherDegree = panelWithFlowLayout();
         panelTeacherDegree.add(label("Formação:"));
 
         JComboBox<Degree> teacherBoxDegree = new JComboBox<>(Degree.values());
@@ -170,16 +174,18 @@ public class Interface {
         panelTeacher.add(panelTeacherDegree);
 
         // Botão de cadastro de professor
-        JPanel panelTeacherCreate = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelTeacherCreate = panelWithFlowLayout();
         JButton buttonCreateTeacher = new JButton("Cadastrar professor");
         buttonCreateTeacher.addActionListener(e -> {
-            boolean result = program.createTeacher(textTeacherName.getText(),
-                    Integer.parseInt(textTeacherId.getText()), (Degree) teacherBoxDegree.getSelectedItem());
+            if (!isTextEmpty(textTeacherName, textTeacherId)) {
+                boolean result = program.createTeacher(textTeacherName.getText(),
+                        Integer.parseInt(textTeacherId.getText()), (Degree) teacherBoxDegree.getSelectedItem());
 
-            resultMessage(result);
+                resultMessage(result);
 
-            textTeacherName.setText("");
-            textTeacherId.setText("");
+                textTeacherName.setText("");
+                textTeacherId.setText("");
+            } else resultMessage(false);
         });
         panelTeacherCreate.add(buttonCreateTeacher);
         panelTeacher.add(panelTeacherCreate);
@@ -193,7 +199,7 @@ public class Interface {
         panelSubject.add(panelWithDescription("CADASTRO DE DISCIPLINA"));
 
         // Nome
-        JPanel panelSubjectName = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelSubjectName = panelWithFlowLayout();
         panelSubjectName.add(label("Nome:"));
 
         JTextField textSubjectName = new JTextField(15);
@@ -201,7 +207,7 @@ public class Interface {
         panelSubject.add(panelSubjectName);
 
         // Matrícula
-        JPanel panelSubjectId = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelSubjectId = panelWithFlowLayout();
         panelSubjectId.add(label("Código:"));
 
         JTextField textSubjectId = new JTextField(5);
@@ -209,7 +215,7 @@ public class Interface {
         panelSubject.add(panelSubjectId);
 
         // Descrição
-        JPanel panelSubjectDescription = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelSubjectDescription = panelWithFlowLayout();
         panelSubjectDescription.add(label("Descrição:"));
 
         JTextArea textAreaSubjectDescription = new JTextArea(2, 10);
@@ -217,7 +223,7 @@ public class Interface {
         panelSubject.add(panelSubjectDescription);
 
         // Quantidade máxima de alunos
-        JPanel panelSubjectMaxStudents = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelSubjectMaxStudents = panelWithFlowLayout();
         panelSubjectMaxStudents.add(label("Quantidade máxima de alunos:"));
 
         JTextField textSubjectMaxStudents = new JTextField(5);
@@ -225,7 +231,7 @@ public class Interface {
         panelSubject.add(panelSubjectMaxStudents);
 
         // Carga horária semanal
-        JPanel panelSubjectWorkload = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelSubjectWorkload = panelWithFlowLayout();
         panelSubjectWorkload.add(label("Carga horária semanal:"));
 
         JTextField textSubjectWorkload = new JTextField(5);
@@ -233,7 +239,7 @@ public class Interface {
         panelSubject.add(panelSubjectWorkload);
 
         // Formação necessária
-        JPanel panelSubjectDegree = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelSubjectDegree = panelWithFlowLayout();
         panelSubjectDegree.add(label("Formação necessária:"));
 
         JComboBox<Degree> subjectBoxDegree = new JComboBox<>(Degree.values());
@@ -241,26 +247,27 @@ public class Interface {
         panelSubject.add(panelSubjectDegree);
 
         // Botão de cadastro de disciplina
-        JPanel panelSubjectCreate = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel panelSubjectCreate = panelWithFlowLayout();
         JButton buttonCreateSubject = new JButton("Cadastrar disciplina");
         buttonCreateSubject.addActionListener(e -> {
+            if (!isTextEmpty(textSubjectName, textSubjectId, textSubjectMaxStudents, textSubjectWorkload)) {
+                String name = textSubjectName.getText();
+                int id = Integer.parseInt(textSubjectId.getText());
+                String description = textAreaSubjectDescription.getText();
+                int maxStudents = Integer.parseInt(textSubjectMaxStudents.getText());
+                int workload = Integer.parseInt(textSubjectWorkload.getText());
+                Degree requiredDegree = (Degree) subjectBoxDegree.getSelectedItem();
 
-            String name = textSubjectName.getText();
-            int id = Integer.parseInt(textSubjectId.getText());
-            String description = textAreaSubjectDescription.getText();
-            int maxStudents = Integer.parseInt(textSubjectMaxStudents.getText());
-            int workload = Integer.parseInt(textSubjectWorkload.getText());
-            Degree requiredDegree = (Degree) subjectBoxDegree.getSelectedItem();
+                boolean result = program.createSubject(id, name, description, maxStudents, workload, requiredDegree);
 
-            boolean result = program.createSubject(id, name, description, maxStudents, workload, requiredDegree);
+                resultMessage(result);
 
-            resultMessage(result);
-
-            textSubjectName.setText("");
-            textSubjectId.setText("");
-            textAreaSubjectDescription.setText("");
-            textSubjectMaxStudents.setText("");
-            textSubjectWorkload.setText("");
+                textSubjectName.setText("");
+                textSubjectId.setText("");
+                textAreaSubjectDescription.setText("");
+                textSubjectMaxStudents.setText("");
+                textSubjectWorkload.setText("");
+            } else resultMessage(false);
         });
 
         panelSubjectCreate.add(buttonCreateSubject);
@@ -315,7 +322,7 @@ public class Interface {
         JButton buttonAlloc = new JButton("Alocar em turmas");
         buttonAlloc.addActionListener(e -> {
             boolean result = program.allocAllToClasses();
-            System.out.println(program.toString());
+            // System.out.println(program.toString());
             resultMessage(result);
         });
         buttonPanel.add(buttonAlloc);
@@ -416,8 +423,20 @@ public class Interface {
         return panel;
     }
 
+    private JPanel panelWithFlowLayout() {
+        return new JPanel(new FlowLayout(FlowLayout.CENTER));
+    }
+
     private JLabel label(String text) {
         return new JLabel(text);
+    }
+
+    private boolean isTextEmpty(JTextField textOne, JTextField textTwo) {
+        return textOne.getText().isEmpty() || textTwo.getText().isEmpty();   
+    }
+
+    private boolean isTextEmpty(JTextField textOne, JTextField textTwo, JTextField textThree, JTextField textFour) {
+        return textOne.getText().isEmpty() || textTwo.getText().isEmpty() || textThree.getText().isEmpty() || textFour.getText().isEmpty();   
     }
 
     // Mensagem de resultado

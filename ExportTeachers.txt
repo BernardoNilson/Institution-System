@@ -1,5 +1,5 @@
-Nome: Edson Moreno, Matrícula: 900201, Formação: ORIENTACAO_A_OBJETOS
-Nome: Fernando Machado, Matrícula: 900202, Formação: SISTEMAS_DIGITAIS
-Nome: Ana Maria Madalena, Matrícula: 900103, Formação: FISICA_MEDICA
-Nome: Juliana Pereira, Matrícula: 900104, Formação: MATEMATICA
-Nome: Caio da Silva, Matrícula: 900105, Formação: ESTRUTURA_DE_DADOS
+Nome: Edson Moreno, Matr�cula: 900201, Forma��o: ORIENTACAO_A_OBJETOS
+Nome: Fernando Machado, Matr�cula: 900202, Forma��o: SISTEMAS_DIGITAIS
+Nome: Ana Maria Madalena, Matr�cula: 900103, Forma��o: LOGICA
+Nome: Juliana Pereira, Matr�cula: 900104, Forma��o: MATEMATICA
+Nome: Caio da Silva, Matr�cula: 900105, Forma��o: ESTRUTURA_DE_DADOS

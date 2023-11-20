@@ -27,6 +27,10 @@ public class Person {
         return usedHours;
     }
 
+    public void cleanUsedHours() {
+        usedHours = 0;
+    }
+
     public void addUsedHours(int toAdd) {
         usedHours = usedHours + toAdd;
     }

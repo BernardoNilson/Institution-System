@@ -97,7 +97,3 @@ zero. Dito isto, não compartilhe sua solução nem a deixe pública.
 Todos os trabalhos a serem avaliados, serão baixados do moodle e avaliados pelo
 professor em um computador da universidade. Sendo assim, considerem validar seus trabalhos
 nos computadores da instituição.
-
-## Desenvolvimento
-diferente da PUCRS aqui as turmas nao tem codigo unico
-## Compilação e execução
