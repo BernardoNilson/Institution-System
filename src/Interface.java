@@ -233,20 +233,24 @@ public class Interface {
         panelSubjectWorkload.add(textSubjectWorkload);
         panelSubject.add(panelSubjectWorkload);
 
-        // Formação necessária
-        JPanel panelSubjectTeachers = panelWithFlowLayout();
+        // Professores 
+        JPanel panelSubjectTeachers = new JPanel(new GridLayout(0, 1));
         panelSubjectTeachers.add(label("Selecione os professores que podem ministrar:"));
 
         DefaultListModel<Teacher> listOfTeachers = new DefaultListModel<>();
-        listOfTeachers.addAll(program.getTeachers());
+        for (Teacher teacher : program.getTeachers()) {
+            listOfTeachers.addElement(teacher);
+        }
         JList<Teacher> listSubjectTeachers = new JList<>(listOfTeachers);
         listSubjectTeachers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         panelSubjectTeachers.add(listSubjectTeachers);
 
         // Cria o botão de Refresh
+        JPanel panelButton = new JPanel();
         JButton buttonRefresh = new JButton("Refresh");
         buttonRefresh.addActionListener(e -> updateView(listSubjectTeachers));
-        panelSubjectTeachers.add(buttonRefresh);
+        panelButton.add(buttonRefresh);
+        panelSubjectTeachers.add(panelButton);
         panelSubject.add(panelSubjectTeachers);
 
         // Botão de cadastro de disciplina
